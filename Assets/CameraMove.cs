@@ -8,6 +8,9 @@ public class CameraMove : MonoBehaviour
 
     public float turntime = 0;
 
+    public Vector3 fromPos = Vector3.zero;
+    public Vector3 toPos = Vector3.zero;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -16,7 +19,8 @@ public class CameraMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.localRotation = Quaternion.Euler(0, Time.time, 0);
+        turntime += Time.deltaTime;
+        transform.position = Vector3.Lerp(fromPos, toPos, 0.5f * (Mathf.Sin(turntime) + 1));
         
     }
 }
