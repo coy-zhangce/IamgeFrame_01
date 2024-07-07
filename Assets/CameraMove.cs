@@ -11,6 +11,9 @@ public class CameraMove : MonoBehaviour
     public Vector3 fromPos = Vector3.zero;
     public Vector3 toPos = Vector3.zero;
 
+    public GameObject target = null;
+    public GameObject cameraObj = null;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +24,6 @@ public class CameraMove : MonoBehaviour
     {
         turntime += Time.deltaTime;
         transform.position = Vector3.Lerp(fromPos, toPos, 0.5f * (Mathf.Sin(turntime) + 1));
-        
+        transform.rotation = Quaternion.LookRotation(target.transform.position - transform.position);
     }
 }

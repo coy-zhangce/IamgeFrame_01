@@ -8,11 +8,14 @@ public class MeshTool_FrameOneSide : MonoBehaviour
     private MeshFilter meshFilter;
     public Material mat;
 
+    public GameObject MyGameObject = null;
     private const int CORNERSIZE = 10;
 
     public float width = 10;
     public float height = 10;
     public float radius = 1;
+
+    public Vector3 posOffset = Vector3.zero;
 
     //          4, 5
     //      11, 0, 1, 6 
@@ -69,16 +72,26 @@ public class MeshTool_FrameOneSide : MonoBehaviour
         mesh.normals = normals;
         mesh.uv = uvs;
 
-        meshFilter = GetComponent<MeshFilter>();
+        if (MyGameObject != null)
+            GameObject.Destroy(MyGameObject);
+        MyGameObject = new GameObject("FrameOneSide");
+        MyGameObject.transform.parent = gameObject.transform;
+        MyGameObject.transform.localPosition = posOffset;
+        MyGameObject.transform.localRotation = Quaternion.identity;
+        MyGameObject.transform.localScale = Vector3.one;
+
+
+
+        meshFilter = MyGameObject.GetComponent<MeshFilter>();
         if (!meshFilter)
         {
-            meshFilter = gameObject.AddComponent<MeshFilter>();
+            meshFilter = MyGameObject.AddComponent<MeshFilter>();
             meshFilter.mesh = mesh;
         }
-        MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
+        MeshRenderer meshRenderer = MyGameObject.GetComponent<MeshRenderer>();
         if (!meshRenderer)
         {
-            meshRenderer = gameObject.AddComponent<MeshRenderer>();
+            meshRenderer = MyGameObject.AddComponent<MeshRenderer>();
             meshRenderer.material = mat;
         }
     }
@@ -118,7 +131,7 @@ public class MeshTool_FrameOneSide : MonoBehaviour
         uv[3] = new Vector2(rad_u, 1.0f - rad_v);
         uv[4] = new Vector2(rad_u, 0);
         uv[5] = new Vector2(1.0f - rad_u, 0);
-        uv[6] = new Vector2(1.0f, rad_u);
+        uv[6] = new Vector2(1.0f, rad_v);
         uv[7] = new Vector2(1.0f, 1.0f - rad_v);
         uv[8] = new Vector2(1.0f - rad_u, 1.0f);
         uv[9] = new Vector2(rad_u, 1.0f);
