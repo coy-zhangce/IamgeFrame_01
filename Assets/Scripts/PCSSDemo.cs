@@ -44,7 +44,8 @@ public class PCSSDemo : MonoBehaviour
         softnessFalloffSlider.value = pcssScript.SoftnessFalloff;
         SetSoftnessFalloff(softnessFalloffSlider.value);
 
-//		SetShadowMode(shadowMode.value);
+        //		SetShadowMode(shadowMode.value);
+        msaaMode.value = 1;
 		SetMSAAMode(msaaMode.value);
     }
 

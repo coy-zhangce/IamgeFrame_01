@@ -93,7 +93,10 @@ public class MeshTool_FrameOneSide : MonoBehaviour
         {
             meshRenderer = MyGameObject.AddComponent<MeshRenderer>();
             meshRenderer.material = mat;
+            meshRenderer.receiveShadows = false;
+            meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         }
+
     }
 
     void FillVertices(ref Vector3[] vertices)
