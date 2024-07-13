@@ -9,7 +9,7 @@ public class MeshTool_Border : MonoBehaviour
     public Material mat;
 
     public GameObject MyGameObject = null;
-    private const int CORNERSIZE = 10;
+    public int cSize = MeshTool_Util.CORNERSIZE;
 
     public float width = 10;
     public float height = 10;
@@ -30,38 +30,38 @@ public class MeshTool_Border : MonoBehaviour
         float v0_h = height - rOut * 2;
 
         //new Vector3(0, 0, 0),            new Vector3(0, 0, 10),            new Vector3(10, 0, 10),            new Vector3(10, 0, 0)
-        Vector3[] vertices = new Vector3[12 + CORNERSIZE * 4];
+        Vector3[] vertices = new Vector3[12 + cSize * 4];
         {
             FillVertices(ref vertices);
             FillVertices_Zone(ref vertices, new Vector3(rOut, 0, rOut), 16, 4, 12, 1, 9);
-            FillVertices_Zone(ref vertices, new Vector3(width - rOut, 0, rOut), 16 + CORNERSIZE * 2, 5, 13, 2, 10);
-            FillVertices_Zone(ref vertices, new Vector3(width - rOut, 0, height - rOut), 16 + CORNERSIZE * 4, 6, 14, 3, 11);
-            FillVertices_Zone(ref vertices, new Vector3(rOut, 0, height - rOut), 16 + CORNERSIZE * 6, 7, 15, 0, 8);
+            FillVertices_Zone(ref vertices, new Vector3(width - rOut, 0, rOut), 16 + cSize * 2, 5, 13, 2, 10);
+            FillVertices_Zone(ref vertices, new Vector3(width - rOut, 0, height - rOut), 16 + cSize * 4, 6, 14, 3, 11);
+            FillVertices_Zone(ref vertices, new Vector3(rOut, 0, height - rOut), 16 + cSize * 6, 7, 15, 0, 8);
         }
 
 
         // 设置网格的三角形（每个三角形由三个顶点的索引构成）
-        int[] triangles = new int[5 * 6 + 12 * (CORNERSIZE + 2)];
+        int[] triangles = new int[5 * 6 + 12 * (cSize + 2)];
 
 
         // 设置网格的法线（可选，但通常用于光照计算）
-        Vector3[] normals = new Vector3[12 + CORNERSIZE * 4];
+        Vector3[] normals = new Vector3[12 + cSize * 4];
         {
-            for (int i = 0; i < 12 + CORNERSIZE * 4; i++)
+            for (int i = 0; i < 12 + cSize * 4; i++)
                 normals[i] = Vector3.up;
         };
 
 
         // 设置网格的UV坐标（可选，但通常用于纹理映射）
-        Vector2[] uvs = new Vector2[12 + CORNERSIZE * 4];
+        Vector2[] uvs = new Vector2[12 + cSize * 4];
         {
             float rad_u = rOut / width;
             float rad_v = rOut / height;
             FillUV(ref uvs, rad_u, rad_v);
             FillUV_Zone(ref uvs, 12, 0, 11, 4);
-            FillUV_Zone(ref uvs, 12 + CORNERSIZE, 1, 5, 6);
-            FillUV_Zone(ref uvs, 12 + CORNERSIZE * 2, 2, 7, 8);
-            FillUV_Zone(ref uvs, 12 + CORNERSIZE * 3, 3, 9, 10);
+            FillUV_Zone(ref uvs, 12 + cSize, 1, 5, 6);
+            FillUV_Zone(ref uvs, 12 + cSize * 2, 2, 7, 8);
+            FillUV_Zone(ref uvs, 12 + cSize * 3, 3, 9, 10);
         }
         FileIndex(ref triangles);
         FillIndex_Zone(ref triangles, 0, 11, 4);
@@ -128,8 +128,8 @@ public class MeshTool_Border : MonoBehaviour
         Vector3 dir_UO = vertices[o0] - start;
         Vector3 dir_V = vertices[i1] - start;
         Vector3 dir_VO = vertices[i1] - start;
-        float step = Mathf.PI / (CORNERSIZE + 1) * 0.5f;
-        for (int i = 0; i < CORNERSIZE; i++)
+        float step = Mathf.PI / (cSize + 1) * 0.5f;
+        for (int i = 0; i < cSize; i++)
         {
             vertices[startIndex + i*2] = start + Mathf.Cos(step * (i + 1)) * dir_U + Mathf.Sin(step * (i + 1)) * dir_V;
             vertices[startIndex + i*2 +1] = start + Mathf.Cos(step * (i + 1)) * dir_UO + Mathf.Sin(step * (i + 1)) * dir_VO;
@@ -157,8 +157,8 @@ public class MeshTool_Border : MonoBehaviour
         Vector2 corner = uv[i0];
         Vector2 dir_U = uv[i1] - corner;
         Vector2 dir_V = uv[i2] - corner;
-        float step = Mathf.PI / (CORNERSIZE + 1) * 0.5f;
-        for (int i = 0; i < CORNERSIZE; i++)
+        float step = Mathf.PI / (cSize + 1) * 0.5f;
+        for (int i = 0; i < cSize; i++)
         {
             uv[startIndex + i] = corner + Mathf.Cos(step * (i + 1)) * dir_U + Mathf.Sin(step * (i + 1)) * dir_V;
         }
@@ -179,21 +179,21 @@ public class MeshTool_Border : MonoBehaviour
     void FillIndex_Zone(ref int[] ib, int i0, int i1, int i2)
     {
         // 左边三角面
-        ib[30 + i0 * 3 * (CORNERSIZE + 2)] = i1;
-        ib[31 + i0 * 3 * (CORNERSIZE + 2)] = 12 + CORNERSIZE * i0;
-        ib[32 + i0 * 3 * (CORNERSIZE + 2)] = i0;
+        ib[30 + i0 * 3 * (cSize + 2)] = i1;
+        ib[31 + i0 * 3 * (cSize + 2)] = 12 + cSize * i0;
+        ib[32 + i0 * 3 * (cSize + 2)] = i0;
 
-        for (int i = 0; i < CORNERSIZE; i++)
+        for (int i = 0; i < cSize; i++)
         {
-            ib[33 + i0 * 3 * (CORNERSIZE + 2) + i * 3] = 12 + CORNERSIZE * i0 + i;
-            ib[34 + i0 * 3 * (CORNERSIZE + 2) + i * 3] = 12 + CORNERSIZE * i0 + i + 1;
-            ib[35 + i0 * 3 * (CORNERSIZE + 2) + i * 3] = i0;
+            ib[33 + i0 * 3 * (cSize + 2) + i * 3] = 12 + cSize * i0 + i;
+            ib[34 + i0 * 3 * (cSize + 2) + i * 3] = 12 + cSize * i0 + i + 1;
+            ib[35 + i0 * 3 * (cSize + 2) + i * 3] = i0;
         }
 
         // 右侧三角面
-        ib[30 + i0 * 3 * (CORNERSIZE + 2) + CORNERSIZE * 3] = 12 + CORNERSIZE * i0 + CORNERSIZE - 1;
-        ib[31 + i0 * 3 * (CORNERSIZE + 2) + CORNERSIZE * 3] = i2;
-        ib[32 + i0 * 3 * (CORNERSIZE + 2) + CORNERSIZE * 3] = i0;
+        ib[30 + i0 * 3 * (cSize + 2) + cSize * 3] = 12 + cSize * i0 + cSize - 1;
+        ib[31 + i0 * 3 * (cSize + 2) + cSize * 3] = i2;
+        ib[32 + i0 * 3 * (cSize + 2) + cSize * 3] = i0;
 
     }
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MeshTool_FrameOneSide : MonoBehaviour
+public class MeshTool_Frame_SideB : MonoBehaviour
 {
     private Mesh mesh;
     private MeshFilter meshFilter;
@@ -157,8 +157,8 @@ public class MeshTool_FrameOneSide : MonoBehaviour
     void FileIndex(ref int[] ib)
     {
         int[] indexb = {
-            0, 2, 1,   2, 0, 3,            4, 1, 5,   1, 4, 0,             1, 7, 6,   7, 1, 2,
-            3, 8, 2,   8, 3, 9,            11, 3, 0,  3, 11, 10,
+            0, 1,2,    2, 3, 0,            4, 5, 1,   1, 0, 4,             1, 6, 7,   7, 2, 1,
+            3, 2, 8,   8, 9, 3,            11, 0, 3,  3, 10, 11,
         };
         for (int i = 0; i< 30; i++)
         {
@@ -170,20 +170,20 @@ public class MeshTool_FrameOneSide : MonoBehaviour
     {
         // 左边三角面
         ib[30 + i0 * 3 * (CORNERSIZE + 2)] = i1;   
-        ib[32 + i0 * 3 * (CORNERSIZE + 2)] = 12 + CORNERSIZE * i0;
-        ib[31 + i0 * 3 * (CORNERSIZE + 2)] = i0;
+        ib[31 + i0 * 3 * (CORNERSIZE + 2)] = 12 + CORNERSIZE * i0;
+        ib[32 + i0 * 3 * (CORNERSIZE + 2)] = i0;
 
         for (int i = 0; i < CORNERSIZE ; i++)
         {
             ib[33 + i0 * 3 * (CORNERSIZE + 2) + i * 3] = 12 + CORNERSIZE * i0 + i;
-            ib[35 + i0 * 3 * (CORNERSIZE + 2) + i * 3] = 12 + CORNERSIZE * i0 + i + 1;
-            ib[34 + i0 * 3 * (CORNERSIZE + 2) + i * 3] = i0;
+            ib[34 + i0 * 3 * (CORNERSIZE + 2) + i * 3] = 12 + CORNERSIZE * i0 + i + 1;
+            ib[35 + i0 * 3 * (CORNERSIZE + 2) + i * 3] = i0;
         }
 
         // 右侧三角面
         ib[30 + i0 * 3 * (CORNERSIZE + 2) + CORNERSIZE * 3] = 12 + CORNERSIZE * i0 + CORNERSIZE - 1;
-        ib[32 + i0 * 3 * (CORNERSIZE + 2) + CORNERSIZE * 3] = i2;
-        ib[31 + i0 * 3 * (CORNERSIZE + 2) + CORNERSIZE * 3] = i0;
+        ib[31 + i0 * 3 * (CORNERSIZE + 2) + CORNERSIZE * 3] = i2;
+        ib[32 + i0 * 3 * (CORNERSIZE + 2) + CORNERSIZE * 3] = i0;
 
     }
 }

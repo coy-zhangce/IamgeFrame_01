@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MeshTool_FrameOneSideB : MonoBehaviour
+public class MeshTool_Frame_SideA : MonoBehaviour
 {
     private Mesh mesh;
     private MeshFilter meshFilter;
@@ -14,7 +14,7 @@ public class MeshTool_FrameOneSideB : MonoBehaviour
     public float width = 10;
     public float height = 10;
     public float radius = 1;
-    
+
     public Vector3 posOffset = Vector3.zero;
 
     //          4, 5
@@ -38,7 +38,7 @@ public class MeshTool_FrameOneSideB : MonoBehaviour
 
 
         // 设置网格的三角形（每个三角形由三个顶点的索引构成）
-        int[] triangles = new int[5 * 6 + 12 * (CORNERSIZE + 2)];
+        int[] triangles = new int[ 5 * 6 + 12 * (CORNERSIZE + 2)];
 
 
         // 设置网格的法线（可选，但通常用于光照计算）
@@ -93,7 +93,10 @@ public class MeshTool_FrameOneSideB : MonoBehaviour
         {
             meshRenderer = MyGameObject.AddComponent<MeshRenderer>();
             meshRenderer.material = mat;
+            meshRenderer.receiveShadows = false;
+            meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         }
+
     }
 
     void FillVertices(ref Vector3[] vertices)
@@ -117,7 +120,7 @@ public class MeshTool_FrameOneSideB : MonoBehaviour
         Vector3 dir_U = vertices[i1] - start0;
         Vector3 dir_V = vertices[i2] - start0;
         float step = Mathf.PI / (CORNERSIZE + 1) * 0.5f;
-        for (int i = 0; i < CORNERSIZE; i++)
+        for (int i = 0; i < CORNERSIZE ; i++)
         {
             vertices[startIndex + i] = start0 + Mathf.Cos(step * (i + 1)) * dir_U + Mathf.Sin(step * (i + 1)) * dir_V;
         }
@@ -154,10 +157,10 @@ public class MeshTool_FrameOneSideB : MonoBehaviour
     void FileIndex(ref int[] ib)
     {
         int[] indexb = {
-            0, 1, 2,   2, 3, 0,             4, 5,1,    1,  0,4,             1, 6,7,    7, 2,1,
-            3, 2, 8,    8, 9, 3,             11, 0,3,    3, 10,11,
+            0, 2, 1,   2, 0, 3,            4, 1, 5,   1, 4, 0,             1, 7, 6,   7, 1, 2,
+            3, 8, 2,   8, 3, 9,            11, 3, 0,  3, 11, 10,
         };
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i< 30; i++)
         {
             ib[i] = indexb[i];
         }
@@ -166,21 +169,21 @@ public class MeshTool_FrameOneSideB : MonoBehaviour
     void FillIndex_Zone(ref int[] ib, int i0, int i1, int i2)
     {
         // 左边三角面
-        ib[30 + i0 * 3 * (CORNERSIZE + 2)] = i1;
-        ib[31 + i0 * 3 * (CORNERSIZE + 2)] = 12 + CORNERSIZE * i0;
-        ib[32 + i0 * 3 * (CORNERSIZE + 2)] = i0;
+        ib[30 + i0 * 3 * (CORNERSIZE + 2)] = i1;   
+        ib[32 + i0 * 3 * (CORNERSIZE + 2)] = 12 + CORNERSIZE * i0;
+        ib[31 + i0 * 3 * (CORNERSIZE + 2)] = i0;
 
-        for (int i = 0; i < CORNERSIZE; i++)
+        for (int i = 0; i < CORNERSIZE ; i++)
         {
             ib[33 + i0 * 3 * (CORNERSIZE + 2) + i * 3] = 12 + CORNERSIZE * i0 + i;
-            ib[34 + i0 * 3 * (CORNERSIZE + 2) + i * 3] = 12 + CORNERSIZE * i0 + i + 1;
-            ib[35 + i0 * 3 * (CORNERSIZE + 2) + i * 3] = i0;
+            ib[35 + i0 * 3 * (CORNERSIZE + 2) + i * 3] = 12 + CORNERSIZE * i0 + i + 1;
+            ib[34 + i0 * 3 * (CORNERSIZE + 2) + i * 3] = i0;
         }
 
         // 右侧三角面
         ib[30 + i0 * 3 * (CORNERSIZE + 2) + CORNERSIZE * 3] = 12 + CORNERSIZE * i0 + CORNERSIZE - 1;
-        ib[31 + i0 * 3 * (CORNERSIZE + 2) + CORNERSIZE * 3] = i2;
-        ib[32 + i0 * 3 * (CORNERSIZE + 2) + CORNERSIZE * 3] = i0;
+        ib[32 + i0 * 3 * (CORNERSIZE + 2) + CORNERSIZE * 3] = i2;
+        ib[31 + i0 * 3 * (CORNERSIZE + 2) + CORNERSIZE * 3] = i0;
 
     }
 }
