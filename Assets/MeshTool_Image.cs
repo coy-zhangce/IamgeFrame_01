@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class MeshTool_Glass : MonoBehaviour
+public class MeshTool_Image : MonoBehaviour
 {
     public float width = 10;
     public float height = 10;
@@ -12,7 +12,9 @@ public class MeshTool_Glass : MonoBehaviour
     private Mesh mesh;
     private MeshFilter meshFilter;
     public Material mat;
-    //public GameObject MyGameObject = null;
+    public GameObject MyGameObject = null;
+
+    public List<string> imageAddress = new List<string>();
 
     private int cornersize = MeshTool_Util.CORNERSIZE;
     void Start()
@@ -44,26 +46,26 @@ public class MeshTool_Glass : MonoBehaviour
         mesh.normals = nls.ToArray();
         mesh.uv = uvs.ToArray();
 
-        //if (MyGameObject != null)
-        //    GameObject.Destroy(MyGameObject);
-        //MyGameObject = new GameObject("FrameOneSide");
-        //MyGameObject.transform.parent = gameObject.transform;
-        //MyGameObject.transform.localPosition = Vector3.zero;
-        //MyGameObject.transform.localRotation = Quaternion.identity;
-        //MyGameObject.transform.localScale = Vector3.one;
+        if (MyGameObject != null)
+            GameObject.Destroy(MyGameObject);
+        MyGameObject = new GameObject("FrameOneSide");
+        MyGameObject.transform.parent = gameObject.transform;
+        MyGameObject.transform.localPosition = Vector3.zero;
+        MyGameObject.transform.localRotation = Quaternion.identity;
+        MyGameObject.transform.localScale = Vector3.one;
 
 
 
-        meshFilter = GetComponent<MeshFilter>();
+        meshFilter = MyGameObject.GetComponent<MeshFilter>();
         if (!meshFilter)
         {
-            meshFilter = gameObject.AddComponent<MeshFilter>();
+            meshFilter = MyGameObject.AddComponent<MeshFilter>();
             meshFilter.mesh = mesh;
         }
-        MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer>();
+        MeshRenderer meshRenderer = MyGameObject.GetComponent<MeshRenderer>();
         if (!meshRenderer)
         {
-            meshRenderer = gameObject.AddComponent<MeshRenderer>();
+            meshRenderer = MyGameObject.AddComponent<MeshRenderer>();
             meshRenderer.material = mat;
             meshRenderer.receiveShadows = false;
             meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -213,5 +215,58 @@ public class MeshTool_Glass : MonoBehaviour
         ib.Add(x);
         ib.Add(y);
         ib.Add(z);
+    }
+
+    int imageIndex = -1;
+
+    private void OnGUI()
+    {
+        if (GUI.Button(new Rect(20, 40, 100, 20), "Texture"))
+        {
+            imageIndex++;
+            if(imageIndex == imageAddress.Count)
+            {
+                imageIndex = 0;
+            }
+            StartCoroutine(ImageChange(imageAddress[imageIndex]));
+        }
+
+
+        if (GUI.Button(new Rect(20, 70, 100, 20), "Reset"))
+        {
+            LoadConfig();
+        }
+    }
+
+    IEnumerator ImageChange(string address)
+    {
+        UnityWebRequest www = UnityWebRequest.Get(address);
+        var downloadTexture = new DownloadHandlerTexture(true);
+        www.downloadHandler = downloadTexture;
+        yield return www.SendWebRequest();
+        if (www.isNetworkError || www.isHttpError)
+        {
+            Debug.LogError(www.error + "," + address);
+        }
+        else
+        {
+            Texture2D texture2d = DownloadHandlerTexture.GetContent(www);
+
+            Material material = new Material(mat);
+
+
+
+            // 修改第一个材质的颜色
+            material.SetTexture("_MainTex", texture2d);
+
+            MeshRenderer meshRenderer = MyGameObject.GetComponent<MeshRenderer>();
+            if (meshRenderer)
+            {
+                meshRenderer.material = material;
+            }
+
+        }
+
+
     }
 }
